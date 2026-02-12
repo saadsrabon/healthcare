@@ -1,20 +1,57 @@
-import { SpecialityService } from "./specialities.service";
 
-//create specialities controller
-const createSpeciality = async (req, res) => {
-    try {
-        const data = req.body;
-        const result = await SpecialityService.createSpeciality(data);
-        res.status(200).json({
-            message: "Speciality created successfully",
-            data: result,
+import { Request, Response } from "express";
+import { catchAsync } from "../../shared/catchAsync";
+import { sendResponse } from "../../shared/sendResponse";
+import { specialityService } from "./specialities.service";
+
+
+
+const createSpecialty = catchAsync(
+    async (req: Request, res: Response) => {
+        console.log(req.body);
+
+        const payload = {
+            ...req.body,
+         
+        };
+        const result = await specialityService.createspeciality(payload);
+        sendResponse(res, {
+            httpStatusCode: 201,
             success: true,
-        });
-    } catch (error) {
-        res.status(400).json({ 
-            message: "Error creating speciality",
-            success: false,
-            error: error
+            message: 'Specialty created successfully',
+            data: result
         });
     }
-};
+)
+
+
+const getAllSpecialties = catchAsync(
+    async (req: Request, res: Response) => {
+        const result = await specialityService.getAllSpecialties();
+        sendResponse(res, {
+            httpStatusCode: 200,
+            success: true,
+            message: 'Specialties fetched successfully',
+            data: result
+        });
+    }
+)
+
+const deleteSpecialty = catchAsync(
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const result = await specialityService.deletespeciality(id as string);
+        sendResponse(res, {
+            httpStatusCode: 200,
+            success: true,
+            message: 'Specialty deleted successfully',
+            data: result
+        });
+    }
+)
+
+export const SpecialtyController = {
+    createSpecialty,
+    getAllSpecialties,
+    deleteSpecialty
+}
