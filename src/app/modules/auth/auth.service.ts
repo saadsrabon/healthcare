@@ -19,11 +19,29 @@ const registerPatient = async (payload:any ) => {
     throw new Error('Failed to register Patient')
  }
   //create patient Profie in transaction after signup
-//  const patient = await prisma.$transaction(async(tx)=>{
-    
-//  })
+ const patient = await prisma.$transaction(async(tx)=>{
+ try{
+     const patientTX =   await tx.patient.create({
+         data:{
+             userId:data.user.id,
+             name:payload.name,
+             email:payload.email
+         }
+     })
 
-return data
+     return patientTX
+ }
+ catch(error){
+    //manulay   delete user so that if anything happen on the user so it will be handled
+     await prisma.user.delete({where:{id:data.user.id}})
+     throw new Error('Failed to create patient profile')
+ }
+ })
+
+return {
+    ...data,
+    patient
+}
 }
 interface loginPayload{
     email:string,
@@ -48,6 +66,8 @@ const loginUser = async (payload:loginPayload) => {
  if(data.user.status === UserStatus.DELETED){
     throw new Error('User is deleted')
  }
+
+
  return data
 }
 
