@@ -1,13 +1,13 @@
 // create doctor
 
-import { Role, speciality } from "../../../generated/prisma/client";
+import { Role, Speciality } from "../../../generated/prisma/client";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { ICreateDoctorPayload } from "./userInterface";
 
 const createDoctor =async (payload:ICreateDoctorPayload) => {
     //extract  doctor and specialties from payload
-    const sepecialties:speciality[] =[];
+    const sepecialties:Speciality[] =[];
 
     for(const specialityId of payload.specialties){
         const speciality = await prisma.speciality.findUnique({
