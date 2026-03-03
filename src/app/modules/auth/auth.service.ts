@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma";
 import e from "express";
 import { status } from 'http-status';
 import { tokenUtils } from "../../utils/token";
+import AppError from "../../errorhelpers/AppError";
 
 
 const registerPatient = async (payload:any ) => {
@@ -21,7 +22,7 @@ const registerPatient = async (payload:any ) => {
     })
     
  if(!data.user){
-    throw new Error('Failed to register Patient')
+    throw new AppError(status.INTERNAL_SERVER_ERROR, 'Failed to register patient');
  }
   //create patient Profie in transaction after signup
  const patient = await prisma.$transaction(async(tx)=>{
@@ -39,7 +40,7 @@ const registerPatient = async (payload:any ) => {
  catch(error){
     //manulay   delete user so that if anything happen on the user so it will be handled
      await prisma.user.delete({where:{id:data.user.id}})
-     throw new Error('Failed to create patient profile')
+     throw new AppError(status.INTERNAL_SERVER_ERROR, 'Failed to create patient profile');
  }
  })
 
@@ -63,13 +64,13 @@ const loginUser = async (payload:loginPayload) => {
  })
 
  if(!data.user){
-    throw new Error('Failed to login')
+    throw new AppError(status.UNAUTHORIZED, 'Invalid email or password');
  }
  if(data.user.status === UserStatus.BLOCKED){
-    throw new Error('User is blocked')
+    throw new AppError(status.UNAUTHORIZED, 'User is blocked');
  }
  if(data.user.status === UserStatus.DELETED){
-    throw new Error('User is deleted')
+    throw new AppError(status.UNAUTHORIZED, 'User is deleted');
  }
  //   
  const accessToken = tokenUtils.getAccessToken({
