@@ -4,7 +4,8 @@ import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import e from "express";
 import { status } from 'http-status';
-import { getAccessToken, getRefreshToken } from "../../utils/token";
+import { tokenUtils } from "../../utils/token";
+
 
 const registerPatient = async (payload:any ) => {
     const {name,email,password} =payload;
@@ -71,7 +72,7 @@ const loginUser = async (payload:loginPayload) => {
     throw new Error('User is deleted')
  }
  //   
- const accessToken = getAccessToken({
+ const accessToken = tokenUtils.getAccessToken({
     userId:data.user.id,
     role:data.user.role,
     emailVerified:data.user.emailVerified,
@@ -81,7 +82,7 @@ const loginUser = async (payload:loginPayload) => {
     isDeleted:data.user.isDeleted
 })
 
-const refreshToken = getRefreshToken({
+const refreshToken = tokenUtils.getRefreshToken({
     userId:data.user.id,
     role:data.user.role,
     emailVerified:data.user.emailVerified,
