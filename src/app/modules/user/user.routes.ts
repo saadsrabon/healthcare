@@ -3,24 +3,7 @@ import { UserController } from './user.controller';
 import z from 'zod';
 const router = express.Router();
 
-// export interface ICreateDoctorPayload {
-//     password: string;
-//     doctor: {
-//         name: string;
-//         email: string;
-//         profilePhoto?: string;
-//         contactNumber?: string;
-//         address?: string;
-//         registrationNumber: string;
-//         experience?: number;
-//         gender: Gender;
-//         appointmentFee: number;
-//         qualification: string;
-//         currentWorkingPlace: string;
-//         designation: string;
-//     }
-//     specialties: string[];
-// }
+
 // zod validation for create doctor
 const createDoctorZodSchema = z.object({
     password: z.string("Password is required").min(6,"Password must be at least 6 characters long"),

@@ -1,6 +1,10 @@
+
 import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
+import e from "express";
+import { status } from 'http-status';
+import { getAccessToken, getRefreshToken } from "../../utils/token";
 
 const registerPatient = async (payload:any ) => {
     const {name,email,password} =payload;
@@ -66,9 +70,31 @@ const loginUser = async (payload:loginPayload) => {
  if(data.user.status === UserStatus.DELETED){
     throw new Error('User is deleted')
  }
+ //   
+ const accessToken = getAccessToken({
+    userId:data.user.id,
+    role:data.user.role,
+    emailVerified:data.user.emailVerified,
+    name:data.user.name,
+    email:data.user.email,
+    status:data.user.status,
+    isDeleted:data.user.isDeleted
+})
 
-
- return data
+const refreshToken = getRefreshToken({
+    userId:data.user.id,
+    role:data.user.role,
+    emailVerified:data.user.emailVerified,
+    name:data.user.name,
+    email:data.user.email,
+    status:data.user.status,
+    isDeleted:data.user.isDeleted
+})
+ return {
+    ...data,
+    accessToken,
+    refreshToken
+ }
 }
 
 export const authService = {
