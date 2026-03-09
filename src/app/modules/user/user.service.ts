@@ -126,6 +126,9 @@ const createDoctor =async (payload:ICreateDoctorPayload) => {
     }
 }
 
+const createAdmin = async () => {
+    
+}
 export const UserService = {
     createDoctor
 }
