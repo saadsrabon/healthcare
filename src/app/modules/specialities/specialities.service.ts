@@ -1,8 +1,8 @@
 
-import { speciality } from "../../../generated/prisma/client";
+import { Speciality } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
-const createspeciality = async (payload: speciality): Promise<speciality> => {
+const createspeciality = async (payload: Speciality): Promise<Speciality> => {
 
     const speciality = await prisma.speciality.create({
         data: payload
@@ -12,13 +12,13 @@ const createspeciality = async (payload: speciality): Promise<speciality> => {
 
 }
 
-const getAllSpecialties = async (): Promise<speciality[]> => {
+const getAllSpecialties = async (): Promise<Speciality[]> => {
 
     const specialties = await prisma.speciality.findMany();
     return specialties;
 }
 
-const deletespeciality = async (id: string): Promise<speciality> => {
+const deletespeciality = async (id: string): Promise<Speciality> => {
 
     const speciality = await prisma.speciality.delete({
         where: { id }

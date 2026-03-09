@@ -23,6 +23,7 @@ const loginUser =catchAsync(async(req:Request, res:Response) => {
     console.log(payload);
     const result = await authService.loginUser(payload);
         const {accessToken, refreshToken, token , ...rest} = result;
+        console.log(result)
         tokenUtils.setAccessTokenCookie(res, accessToken);
         tokenUtils.setRefreshTokenCookie(res, refreshToken);
         tokenUtils.setBetterAuthSessionCookie(res, token);
