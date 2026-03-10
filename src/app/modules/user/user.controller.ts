@@ -31,7 +31,20 @@ const createAdmin = catchAsync(async(req:Request, res:Response) =>{
         data: result,
     })
 })
+
+const createSuperAdmin = catchAsync(async(req:Request, res:Response) =>{
+    const payload = req.body;
+
+    const result = await UserService.createSuperAdmin(payload);
+    sendResponse(res, {
+        httpStatusCode: status.CREATED,
+        success: true,
+        message: "Super Admin registered successfully",
+        data: result,
+    })
+})
 export const UserController = {
     createDoctor,
-    createAdmin
+    createAdmin,
+    createSuperAdmin
 }
