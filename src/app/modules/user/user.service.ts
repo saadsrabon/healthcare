@@ -142,7 +142,7 @@ const createAdmin = async (payload:any) => {
             email:payload.admin.email,
             password:payload.password,
             name:payload.admin.name,
-            role:Role.ADMIN,
+            role:Role.SUPER_ADMIN,
             needPasswordChange:true
         }
     })
@@ -202,7 +202,7 @@ const createSuperAdmin = async (payload:any) => {
     // first check if any user with the email already exist kore ki na
     const existingUser = await prisma.user.findUnique({
         where:{
-            email:payload.admin.email
+            email:payload.superAdmin.email
         }
     })
     if(existingUser){
@@ -211,9 +211,9 @@ const createSuperAdmin = async (payload:any) => {
     // first we need to create user and then admin
     const userData = await auth.api.signUpEmail({
         body:{
-            email:payload.admin.email,
+            email:payload.Superadmin.email,
             password:payload.password,
-            name:payload.admin.name,
+            name:payload.Superadmin.name,
             role:Role.ADMIN,
             needPasswordChange:true
         }
@@ -221,7 +221,7 @@ const createSuperAdmin = async (payload:any) => {
     // Transaction to create admin profile and if error then delete the user itself
     try{
         const result = await prisma.$transaction(async(tx)=>{
-            const admin = await tx.admin.create({
+            const superadmin = await tx.superadmin.create({
                 data:{
                     userId:userData.user.id,
                     name:payload.admin.name,
@@ -232,8 +232,8 @@ const createSuperAdmin = async (payload:any) => {
             })
           
       // Fetch created admin with user data
-      const createdAdmin = await tx.admin.findUnique({
-        where: { id: admin.id },
+      const createdSuperAdmin = await tx.superadmin.findUnique({
+        where: { id: superadmin.id },
         select: {
           id: true,
           name: true,
@@ -255,7 +255,7 @@ const createSuperAdmin = async (payload:any) => {
         },
       });
 
-      return createdAdmin;
+      return createdSuperAdmin;
         })
 
         return result
@@ -275,4 +275,5 @@ const createSuperAdmin = async (payload:any) => {
 export const UserService = {
     createDoctor,
     createAdmin,
+    createSuperAdmin
 }
