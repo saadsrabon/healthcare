@@ -37,4 +37,5 @@ router.post('/create-doctor',(req,res,next) =>{
 
 // later we will add the check auth middleware
 router.post('/create-admin', UserController.createAdmin);
+router.post('/create-super-admin', UserController.createSuperAdmin);
 export const UserRoutes = router;

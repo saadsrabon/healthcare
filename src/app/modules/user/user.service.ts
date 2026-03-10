@@ -267,7 +267,7 @@ const createSuperAdmin = async (payload:any) => {
                 id: userData.user.id
             }
         })
-        throw new AppError(400, 'Failed to create admin');
+        throw new AppError(400, 'Failed to create Super admin');
     }
 }
 
