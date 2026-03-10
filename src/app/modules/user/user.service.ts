@@ -126,9 +126,79 @@ const createDoctor =async (payload:ICreateDoctorPayload) => {
     }
 }
 
-const createAdmin = async () => {
-    
+const createAdmin = async (payload:any) => {
+    // first check if any user with the email already exist kore ki na
+    const existingUser = await prisma.user.findUnique({
+        where:{
+            email:payload.admin.email
+        }
+    })
+    if(existingUser){
+        throw new AppError(400, 'User with this email already exists');
+    }
+    // first we need to create user and then admin
+    const userData = await auth.api.signUpEmail({
+        body:{
+            email:payload.admin.email,
+            password:payload.password,
+            name:payload.admin.name,
+            role:Role.ADMIN,
+            needPasswordChange:true
+        }
+    })
+    // Transaction to create admin profile and if error then delete the user itself
+    try{
+        const result = await prisma.$transaction(async(tx)=>{
+            const admin = await tx.admin.create({
+                data:{
+                    userId:userData.user.id,
+                    name:payload.admin.name,
+                    email:payload.admin.email,
+                    contactNumber:payload.admin.contactNumber,
+                    profilePhoto:payload.admin.profilePhoto,
+                }
+            })
+          
+      // Fetch created admin with user data
+      const createdAdmin = await tx.admin.findUnique({
+        where: { id: admin.id },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+          contactNumber: true,
+          isDeleted: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
+      });
+
+      return createdAdmin;
+        })
+
+        return result
+    }
+    catch(error){
+        console.log("Transaction error : ", error);
+        await prisma.user.delete({
+            where: {
+                id: userData.user.id
+            }
+        })
+        throw new AppError(400, 'Failed to create admin');
+    }
 }
 export const UserService = {
-    createDoctor
+    createDoctor,
+    createAdmin,
 }
