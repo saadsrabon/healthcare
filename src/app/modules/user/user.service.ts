@@ -142,7 +142,7 @@ const createAdmin = async (payload:any) => {
             email:payload.admin.email,
             password:payload.password,
             name:payload.admin.name,
-            role:Role.SUPER_ADMIN,
+            role:Role.ADMIN,
             needPasswordChange:true
         }
     })
@@ -202,7 +202,7 @@ const createSuperAdmin = async (payload:any) => {
     // first check if any user with the email already exist kore ki na
     const existingUser = await prisma.user.findUnique({
         where:{
-            email:payload.superAdmin.email
+            email:payload.Superadmin.email
         }
     })
     if(existingUser){
@@ -214,7 +214,7 @@ const createSuperAdmin = async (payload:any) => {
             email:payload.Superadmin.email,
             password:payload.password,
             name:payload.Superadmin.name,
-            role:Role.ADMIN,
+            role:Role.SUPER_ADMIN,
             needPasswordChange:true
         }
     })
@@ -224,10 +224,10 @@ const createSuperAdmin = async (payload:any) => {
             const superadmin = await tx.superadmin.create({
                 data:{
                     userId:userData.user.id,
-                    name:payload.admin.name,
-                    email:payload.admin.email,
-                    contactNumber:payload.admin.contactNumber,
-                    profilePhoto:payload.admin.profilePhoto,
+                    name:payload.Superadmin.name,
+                    email:payload.Superadmin.email,
+                    contactNumber:payload.Superadmin.contactNumber,
+                    profilePhoto:payload.Superadmin.profilePhoto,
                 }
             })
           
