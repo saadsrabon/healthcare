@@ -1,8 +1,14 @@
-// import express from 'express';
-// import { DoctorController } from './doctor.controller';
+import express from 'express';
+import { checkAuth } from '../../middleware/checkAuth';
+import { doctorController } from './doctor.controller';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post('/register', DoctorController.registerDoctor);
+// Get all doctors - accessible by ADMIN, SUPER_ADMIN, and DOCTOR
+router.get(
+  "/",
+  checkAuth("ADMIN", "SUPER_ADMIN", "DOCTOR"),
+ doctorController.GetAllDoctor,
+);
 
-// export const doctorRoutes = router;
+export const doctorRoutes = router;
