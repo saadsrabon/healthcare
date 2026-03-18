@@ -6,6 +6,7 @@ import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { ICreateDoctorPayload } from "./userInterface";
 
+//Create doctor
 const createDoctor =async (payload:ICreateDoctorPayload) => {
     //extract  doctor and specialties from payload
     const sepecialties:Speciality[] =[];
@@ -126,6 +127,7 @@ const createDoctor =async (payload:ICreateDoctorPayload) => {
     }
 }
 
+//create admin
 const createAdmin = async (payload:any) => {
     // first check if any user with the email already exist kore ki na
     const existingUser = await prisma.user.findUnique({
@@ -198,6 +200,8 @@ const createAdmin = async (payload:any) => {
         throw new AppError(400, 'Failed to create admin');
     }
 }
+
+//create super admin
 const createSuperAdmin = async (payload:any) => {
     // first check if any user with the email already exist kore ki na
     const existingUser = await prisma.user.findUnique({
