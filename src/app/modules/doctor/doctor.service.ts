@@ -1,3 +1,4 @@
+import { get } from "node:http"
 import { prisma } from "../../lib/prisma"
 // model Speciality{
 //  id String @id @default(uuid(7))
@@ -81,7 +82,28 @@ const GetAllDoctor = async () => {
     return doctors
 }
 
+const getDoctorById = async (id:string) => {
+  const result  = await prisma.doctor.findUnique({
+      where:{
+          id:id,
+          isDeleted:false
+      },
+      include:{
+          specialties:{
+            include:{speciality:true}
+          }
+      }
+  })
+
+  if(!result){
+      throw new Error('Doctor not found')
+  }
+
+  return result
+}
+
     
 export const doctorService ={
-    GetAllDoctor
+    GetAllDoctor,
+    getDoctorById,
 }
