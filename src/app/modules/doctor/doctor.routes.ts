@@ -11,4 +11,11 @@ router.get(
  doctorController.GetAllDoctor,
 );
 
+// Get a specific doctor by ID - accessible by ADMIN, SUPER_ADMIN, and DOCTOR
+router.get(
+  "/:id",
+//   checkAuth("ADMIN", "SUPER_ADMIN", "DOCTOR"),
+  doctorController.getDoctorById,
+);
+
 export const doctorRoutes = router;
