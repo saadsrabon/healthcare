@@ -102,6 +102,8 @@ const getDoctorById = async (id:string) => {
   return result
 }
 
+
+
     
 export const doctorService ={
     GetAllDoctor,
